@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=./config.schema.json
+#
+# Reference for every supported key. `version` selects the schema of the rest
+# of the document and is required.
+#
+# The three blocks below are the three stages of a backup run:
+#   login    stage 1, where the mail is downloaded from
+#   encrypt  stage 2, the public key it is encrypted to (optional)
+#   save     stage 3, where it is stored; set as many destinations as you want
+version: 1
+
+login:
+  imap:
+    host: imap.example.com
+    port: 993
+    username: <username>
+    password: <password>
+    tls: <STARTTLS|SSL|NONE>
+    ca_cert_file: <path to a CA cert file, optional>
+    ignore_server_cert: <true|false>
+    mailbox: <mailbox to backup, optional, defaults to every mailbox>
+
+# Optional. Without it the backup is stored unencrypted and the run says so.
+# Set at most one of public_key_file, public_key_string or
+# public_key_fingerprint. Use `generate-key` to create a key pair.
+#
+# The key itself chooses the encryption format, so there is nothing else to set:
+#   an age key (age1...)          -> age, read back with `age -d -i KEY FILE`
+#   an armoured OpenPGP public key -> pgp, read back with `gpg -d FILE`
+# age is the default and what `generate-key` produces; use OpenPGP if your key
+# already lives in a keyring or on a hardware token.
+encrypt:
+  public_key_file: /path/to/imap-backup-key.pub
+
+save:
+  local:
+    directory: /path/to/save/emails
+  s3:
+    bucket: my-email-backup
+    region: us-west-2
+    access_key_id: <your AWS access key ID>
+    secret_access_key: <your AWS secret access key>
+    endpoint: <URL of an S3-compatible service, optional; omit for AWS>
+    prefix: <key prefix for every uploaded object, optional>
+  tar:
+    path: /path/to/backup.tar.gz

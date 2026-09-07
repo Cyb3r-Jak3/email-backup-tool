@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://public-files.cyberjake.xyz/email-backup-tool/schema.json
+#
+# Template config for email-backup-tool. Fill in the values below, then check
+# the connection with:
+#   email-backup-tool --config email-backup-tool.yaml login
+#
+# See example.yaml in the project repository for a reference covering every
+# supported key.
+version: 1
+
+login:
+  imap:
+    host: imap.example.com
+    port: 993
+    username: CHANGEME
+    password: CHANGEME
+    tls: SSL # STARTTLS, SSL, or NONE
+
+# Optional. Without it, backups are stored unencrypted and the run warns
+# about it. Uncomment one of the options below, or create a key pair first
+# with `email-backup-tool generate-key`.
+# encrypt:
+#   public_key_file: /path/to/email-backup-key.pub
+
+save:
+  local:
+    directory: ./backup

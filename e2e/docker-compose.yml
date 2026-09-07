@@ -1,0 +1,34 @@
+# Backing services for the end-to-end suite in this directory. Brought up and
+# torn down automatically by TestMain in e2e_test.go (`go test -tags e2e ./e2e/...`);
+# `docker compose -f e2e/docker-compose.yml up` also works for manual poking.
+services:
+  # Real IMAP (+SMTP) server, standing in for the account being backed up.
+  # GREENMAIL_OPTS creates one fixed test account; TLS is left off since the
+  # tool's TLS handling already has its own coverage in stages/fetch.
+  imap:
+    image: greenmail/standalone:2.1.3
+    ports:
+      - "3025:3025" # smtp
+      - "3143:3143" # imap
+    environment:
+      GREENMAIL_OPTS: >-
+        -Dgreenmail.setup.test.smtp
+        -Dgreenmail.setup.test.imap
+        -Dgreenmail.hostname=0.0.0.0
+        -Dgreenmail.users=e2e:e2e-password@example.com
+
+  # S3-compatible object store standing in for a real bucket. Data/logs use
+  # named volumes rather than bind mounts: the image runs as uid/gid 10001 and
+  # only a named volume (seeded from the image's own directory) ends up
+  # writable by it; a fresh bind mount or tmpfs does not.
+  s3:
+    image: rustfs/rustfs:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - rustfs-data:/data
+      - rustfs-logs:/logs
+
+volumes:
+  rustfs-data:
+  rustfs-logs:

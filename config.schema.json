@@ -1,0 +1,204 @@
+{
+  "$id": "https://github.com/Cyb3r-Jak3/email-backup-tool/config.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Config file for imap-backup-tool. See example.yaml for a fully annotated example.",
+  "properties": {
+    "encrypt": {
+      "additionalProperties": false,
+      "description": "Stage 2: the public key mail is encrypted to. Omit to store mail unencrypted.",
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "public_key_file",
+              "public_key_string"
+            ]
+          },
+          {
+            "required": [
+              "public_key_file",
+              "public_key_fingerprint"
+            ]
+          },
+          {
+            "required": [
+              "public_key_string",
+              "public_key_fingerprint"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "public_key_file": {
+          "description": "Path to a local age or OpenPGP public key file. Set at most one of public_key_file, public_key_string and public_key_fingerprint.",
+          "type": "string"
+        },
+        "public_key_fingerprint": {
+          "description": "Full 40-hex-digit v4 OpenPGP fingerprint to fetch from public_key_server. Spaces are ignored.",
+          "pattern": "^[0-9A-Fa-f ]{40,}$",
+          "type": "string"
+        },
+        "public_key_server": {
+          "default": "keys.openpgp.org",
+          "description": "Keyserver host public_key_fingerprint is looked up on. Requires public_key_fingerprint.",
+          "type": "string"
+        },
+        "public_key_string": {
+          "description": "An age or armoured OpenPGP public key, given inline.",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "login": {
+      "additionalProperties": false,
+      "description": "Stage 1: where the mail is downloaded from.",
+      "properties": {
+        "imap": {
+          "additionalProperties": false,
+          "description": "The IMAP server mail is fetched from.",
+          "properties": {
+            "ca_cert_file": {
+              "description": "Path to a CA certificate to verify the server, in place of the system trust store.",
+              "type": "string"
+            },
+            "host": {
+              "description": "IMAP server hostname.",
+              "type": "string"
+            },
+            "ignore_server_cert": {
+              "description": "Disable verification of the server certificate.",
+              "type": "boolean"
+            },
+            "mailbox": {
+              "description": "Mailbox to back up. Defaults to every mailbox.",
+              "type": "string"
+            },
+            "password": {
+              "description": "IMAP account password.",
+              "type": "string"
+            },
+            "port": {
+              "default": 993,
+              "description": "IMAP server port.",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "tls": {
+              "description": "How to establish TLS with the server.",
+              "enum": [
+                "STARTTLS",
+                "SSL",
+                "NONE"
+              ],
+              "type": "string"
+            },
+            "username": {
+              "description": "IMAP account username.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "host",
+            "port",
+            "username",
+            "password"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "imap"
+      ],
+      "type": "object"
+    },
+    "save": {
+      "additionalProperties": false,
+      "description": "Stage 3: where mail is stored. Set as many destinations as you want.",
+      "minProperties": 1,
+      "properties": {
+        "local": {
+          "additionalProperties": false,
+          "description": "Save mail to a directory on disk.",
+          "properties": {
+            "directory": {
+              "description": "Directory mail is written to.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "directory"
+          ],
+          "type": "object"
+        },
+        "s3": {
+          "additionalProperties": false,
+          "description": "Save mail to an S3-compatible bucket.",
+          "properties": {
+            "access_key_id": {
+              "description": "Access key ID. Omit to use the ambient AWS configuration.",
+              "type": "string"
+            },
+            "bucket": {
+              "description": "Destination bucket name.",
+              "type": "string"
+            },
+            "endpoint": {
+              "description": "URL of an S3-compatible service. Omit for AWS.",
+              "type": "string"
+            },
+            "prefix": {
+              "description": "Key prefix applied to every uploaded object.",
+              "type": "string"
+            },
+            "region": {
+              "description": "AWS region the bucket is in.",
+              "type": "string"
+            },
+            "secret_access_key": {
+              "description": "Secret access key. Omit to use the ambient AWS configuration.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "bucket"
+          ],
+          "type": "object"
+        },
+        "tar": {
+          "additionalProperties": false,
+          "description": "Save mail into a tar archive.",
+          "properties": {
+            "path": {
+              "description": "Path of the tar archive to write.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "version": {
+      "description": "Config schema version. Selects which fields the rest of the document is validated against.",
+      "enum": [
+        1
+      ],
+      "type": "integer"
+    }
+  },
+  "required": [
+    "version",
+    "login",
+    "save"
+  ],
+  "title": "email-backup-tool config file",
+  "type": "object"
+}

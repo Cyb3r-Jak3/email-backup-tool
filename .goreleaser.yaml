@@ -1,0 +1,142 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    - task generate-schema
+    - task generate-docs
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    goarch:
+      - arm64
+      - amd64
+      - "386"
+      - ppc64le
+      - s390x
+      - riscv64
+    binary: email-backup-tool
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.CommitDate}}
+      - -extldflags "-static"
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: darwin
+        goarch: arm
+      - goos: darwin
+        goarch: "386"
+      - goos: darwin
+        goarch: ppc64le
+
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}"
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+  - id: binary
+    formats: [ 'binary' ]
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ .Version }}-snapshot-{{ .ShortCommit }}"
+
+signs:
+  - artifacts: all
+    args:
+      - "--batch"
+      - "--local-user"
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
+
+sboms:
+  - artifacts: archive
+
+blobs:
+  - provider: s3
+    region: auto
+    endpoint: https://8be772befd147a8df540aae0fa15c047.r2.cloudflarestorage.com
+    bucket: public-files
+    ids:
+      - default
+      - binary
+
+homebrew_casks:
+  - name: email-backup-tool
+    ids:
+      - default
+    directory: Casks
+    description: |
+      A tool to back up your email from an IMAP server, encrypt it, and store it in a cloud storage service.
+      Supports incremental backups, attachments, and multiple mailboxes. Written in Go.
+      Can encrypt backups using age or OpenPGP, and store them in S3-compatible storage.
+    license: Apache-2.0
+    # homepage: "https://email-backup-tool.cyberjake.xyz/"
+    url:
+      verified: "github.com/Cyb3r-Jak3/email-backup-tool"
+    repository:
+      owner: Cyb3r-Jak3
+      name: homebrew-tap
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    completions:
+      bash: ./completions/{{ .ProjectName }}.bash
+      zsh: ./completions/{{ .ProjectName }}.zsh
+      fish: ./completions/{{ .ProjectName }}.fish
+
+release:
+  draft: true
+
+dockers_v2:
+  - dockerfile: Dockerfile
+    images:
+      - "cyb3rjak3/email-backup-tool"
+      - "ghcr.io/cyb3r-jak3/email-backup-tool"
+    tags:
+      - latest
+      - "v{{ .Version }}"
+    labels: &labels
+      "org.opencontainers.image.description": "A tool to back up your email from an IMAP server, encrypt it, and store it in a cloud storage service."
+      "org.opencontainers.image.created": "{{.Date}}"
+      "org.opencontainers.image.name": "{{.ProjectName}}"
+      "org.opencontainers.image.revision": "{{.FullCommit}}"
+      "org.opencontainers.image.version": "{{.Version}}"
+      "org.opencontainers.image.source": "{{.GitURL}}"
+    annotations:
+      <<: *labels
+    platforms:
+      - linux/amd64
+      - linux/arm64
+      - linux/386
+      - linux/ppc64le
+      - linux/s390x
+      - linux/riscv64
