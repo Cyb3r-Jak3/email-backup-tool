@@ -50,7 +50,7 @@ func GenerateConfigSchema() (map[string]any, error) {
 		"$schema":     "https://json-schema.org/draft/2020-12/schema",
 		"$id":         "https://github.com/Cyb3r-Jak3/email-backup-tool/config.schema.json",
 		"title":       "email-backup-tool config file",
-		"description": "Config file for imap-backup-tool. See example.yaml for a fully annotated example.",
+		"description": "Config file for email-backup-tool. See https://email-backup-tool.cyberjake.xyz/ for full documentation.",
 	}
 	maps.Copy(schema, cfg)
 	return schema, nil

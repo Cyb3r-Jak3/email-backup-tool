@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./config.schema.json
+# yaml-language-server: $schema=https://email-backup-tool.cyberjake.xyz/config.schema.json
 #
 # Reference for every supported key. `version` selects the schema of the rest
 # of the document and is required.
@@ -30,7 +30,7 @@ login:
 # age is the default and what `generate-key` produces; use OpenPGP if your key
 # already lives in a keyring or on a hardware token.
 encrypt:
-  public_key_file: /path/to/imap-backup-key.pub
+  public_key_file: /path/to/email-backup-tool-key.pub
 
 save:
   local:

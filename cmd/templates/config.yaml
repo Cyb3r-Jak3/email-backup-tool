@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://public-files.cyberjake.xyz/email-backup-tool/schema.json
+# yaml-language-server: $schema=https://email-backup-tool.cyberjake.xyz/config.schema.json
 #
 # Template config for email-backup-tool. Fill in the values below, then check
 # the connection with:

@@ -2,7 +2,7 @@
   "$id": "https://github.com/Cyb3r-Jak3/email-backup-tool/config.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "description": "Config file for imap-backup-tool. See example.yaml for a fully annotated example.",
+  "description": "Config file for email-backup-tool. See https://email-backup-tool.cyberjake.xyz/ for full documentation.",
   "properties": {
     "encrypt": {
       "additionalProperties": false,
