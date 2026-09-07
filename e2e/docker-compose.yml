@@ -6,7 +6,7 @@ services:
   # GREENMAIL_OPTS creates one fixed test account; TLS is left off since the
   # tool's TLS handling already has its own coverage in stages/fetch.
   imap:
-    image: greenmail/standalone:2.1.3
+    image: greenmail/standalone:2.1.13@sha256:3df66b7edd01c8a301343ca5e3601d8674760d4708655573560c24745e624fb2
     ports:
       - "3025:3025" # smtp
       - "3143:3143" # imap
