@@ -5,4 +5,4 @@ asdf install task latest
 asdf global task latest
 task docs
 task generate-schema
-cp ../config.schema.json documentation/site/
+cp config.schema.json documentation/site/
