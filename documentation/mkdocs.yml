@@ -1,0 +1,81 @@
+site_name: Email Backup Tool
+site_url: https://email-backup-tool.cyberjake.xyz
+repo_url: https://github.com/Cyb3r-Jak3/email-backup-tool
+repo_name: Cyb3r-Jak3/email-backup-tool
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"  # Light mode
+      scheme: default
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: dark)"  # Dark mode
+      scheme: slate
+      primary: light blue
+      accent: indigo
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+
+  features:
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.instant
+    - navigation.indexes
+    - navigation.footer
+    - navigation.top
+
+  plugins:
+    - social
+    - search
+    - minify:
+        minify_html: true
+    - offline
+    - optimize
+  # logo: assets/images/logo.png
+
+nav:
+  - Home: index.md
+  - Installation & Usage: usage.md
+  - Stages:
+      - Overview: stages/index.md
+      - 1. Fetch: stages/fetch.md
+      - 2. Encrypt: stages/encrypt.md
+      - 3. Store: stages/store.md
+  - Commands:
+      - Overview: commands/index.md
+      - init: commands/init.md
+      - generate-key: commands/generate-key.md
+      - decrypt: commands/decrypt.md
+
+copyright: |
+  &copy; 2026 Cyb3r-Jak3. All rights reserved.
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences
+
+extra:
+  social:
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/cyb3rjak3
+      name: Cyb3r-Jak3 Docker images
+
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/Cyb3r_Jak3
+      name: Cyb3r-Jak3 on Twitter

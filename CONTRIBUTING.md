@@ -91,6 +91,33 @@ existing fields), add a `ConfigV2` implementing `VersionedConfig` and register i
 resolve through `ConfigV2.Lookup` so flags don't need to change. Note `GenerateConfigSchema` only
 covers `ConfigV1` today — a new version needs its own schema handling if one is added.
 
+## Documentation
+
+The user-facing docs site lives in [documentation/](documentation/) — a separate MkDocs
+(Material theme) project, not the same thing as this file or CLAUDE.md. Build or preview it
+locally with the `task` targets:
+
+```bash
+task docs          # build the static site into documentation/site
+task docs-serve    # serve it locally at http://localhost:8000 with live reload (via Docker)
+```
+
+It's organized by nav section under `documentation/docs/`:
+
+- `usage.md` — installing the binary (GitHub Releases, Homebrew, Docker).
+- `stages/` — one page per pipeline stage (`fetch.md`, `encrypt.md`, `store.md`), each documenting
+  that stage's config keys/flags/env vars alongside its behavior.
+- `commands/` — one page per standalone command (`init.md`, `generate-key.md`, `decrypt.md`).
+
+If a change adds or renames a config option, flag, or command, update the matching page —
+`documentation/mkdocs.yml`'s `nav` list is what makes a new page show up in the sidebar, so add an
+entry there too. Nothing currently fails the build if these drift from the code (unlike
+`config.schema.json`, which `TestConfigSchemaUpToDate` enforces), so treat keeping them in sync as
+part of the change, not a follow-up.
+
+These docs are written for end users: describe behavior and config in plain terms, and don't
+reference Go interfaces, internal type names, or source files the way CLAUDE.md does.
+
 ## Testing notes
 
 - `stages/fetch` tests run against a real in-process IMAP server

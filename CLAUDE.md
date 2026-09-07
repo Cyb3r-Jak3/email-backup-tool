@@ -116,6 +116,21 @@ window instead of skipping mail it never stored. IMAP `SINCE` compares dates onl
 fetcher re-filters on the exact instant — a resumed run gets back messages it already has and
 must drop them.
 
+## Documentation
+
+The end-user docs site is a separate MkDocs (Material theme) project in
+[documentation/](documentation/docs/) — distinct from this file and `CONTRIBUTING.md`, which are
+for people/agents working on the code, not the tool's users. `task docs` builds it, `task
+docs-serve` previews it locally. Its nav (`documentation/mkdocs.yml`) groups pages under
+**Stages** (`fetch.md`, `encrypt.md`, `store.md` — one per pipeline stage, each with that stage's
+config keys/flags/env vars) and **Commands** (`init.md`, `generate-key.md`, `decrypt.md`), plus a
+top-level `usage.md` for installation.
+
+Nothing enforces these stay current the way `TestConfigSchemaUpToDate` enforces
+`config.schema.json` — a new config key, flag, or command needs its docs page and `nav` entry
+updated by hand as part of the same change. Keep the language user-facing: no `Fetcher`/
+`Transformer`/`Sink`/interface talk, no linking to Go source — that belongs here, not there.
+
 ## Testing
 
 `stages/fetch` tests run against a real in-process IMAP server
