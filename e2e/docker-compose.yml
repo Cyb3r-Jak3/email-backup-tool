@@ -22,7 +22,7 @@ services:
   # only a named volume (seeded from the image's own directory) ends up
   # writable by it; a fresh bind mount or tmpfs does not.
   s3:
-    image: rustfs/rustfs:latest
+    image: rustfs/rustfs:latest@sha256:b7014e0ce2bc703c1316b3ef760e29dfae61fe4a50d1a66fa89638e0f8ea211f
     ports:
       - "9000:9000"
     volumes:
