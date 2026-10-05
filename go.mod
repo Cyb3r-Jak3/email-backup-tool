@@ -11,7 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.114.0
 	github.com/emersion/go-imap/v2 v2.0.0-beta.8
 	github.com/emersion/go-message v0.18.2
-	github.com/urfave/cli/v3 v3.11.0
+	github.com/urfave/cli/v3 v3.14.0
 	go.uber.org/zap v1.28.0
 	gopkg.in/yaml.v3 v3.0.1
 )
